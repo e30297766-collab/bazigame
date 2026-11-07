@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -7,9 +7,7 @@
 <title>BAZIGAME | Minecraft Server</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -20,11 +18,7 @@ body {
     overflow-x: hidden;
 }
 
-/* انیمیشن ورود اولیه */
-
-header {
-    padding: 35px 15px 15px;
-}
+header { padding: 35px 15px 15px; }
 
 .logo {
     width: 180px;
@@ -65,6 +59,7 @@ button, .btn {
     cursor: pointer;
     font-size: 14px;
     text-decoration: none;
+    transition: .25s;
 }
 
 button:hover, .btn:hover {
@@ -83,8 +78,6 @@ nav button:nth-child(2) { animation-delay: 1.7s; }
 nav button:nth-child(3) { animation-delay: 1.9s; }
 nav button:nth-child(4) { animation-delay: 2.1s; }
 nav button:nth-child(5) { animation-delay: 2.3s; }
-
-/* صفحات */
 
 .page {
     display: none;
@@ -112,9 +105,7 @@ nav button:nth-child(5) { animation-delay: 2.3s; }
     box-shadow: 0 10px 35px #0005;
 }
 
-h2 {
-    color: #79c4ff;
-}
+h2 { color: #79c4ff; }
 
 .count {
     font-size: 42px;
@@ -123,7 +114,7 @@ h2 {
     direction: ltr;
 }
 
-.ip {
+.ip, .command {
     direction: ltr;
     background: #080e18;
     padding: 13px;
@@ -132,21 +123,25 @@ h2 {
     margin: 10px;
 }
 
+.command {
+    color: #79c4ff;
+    padding: 12px;
+}
+
 p {
     line-height: 2;
     color: #c2cbd7;
 }
 
-.command {
-    direction: ltr;
-    background: #080e18;
-    color: #79c4ff;
-    padding: 12px;
-    border-radius: 8px;
-}
-
 .status {
     color: #65e69b;
+    font-weight: bold;
+}
+
+.last-check {
+    color: #8295aa;
+    font-size: 12px;
+    direction: ltr;
 }
 
 footer {
@@ -154,8 +149,6 @@ footer {
     color: #78899c;
     animation: fadeDown 1s ease 2.5s both;
 }
-
-/* کلیدهای انیمیشن */
 
 @keyframes logoEnter {
     from {
@@ -231,16 +224,26 @@ footer {
 <section id="home" class="page active">
     <div class="card">
         <h2>به BAZIGAME خوش آمدید</h2>
-        <p class="status" id="status">در حال بررسی سرور...</p>
+
+        <p class="status" id="status">
+            در حال بررسی سرور...
+        </p>
 
         <div class="count" id="players">-- / --</div>
         <p>PLAYERS ONLINE</p>
 
         <h3>آدرس سرور</h3>
-        <div class="ip" id="ip">bazigame.aternos.me:40984</div>
-        <br>
 
+        <div class="ip" id="ip">
+            bazigame.aternos.me:40984
+        </div>
+
+        <br>
         <button onclick="copyIP()">کپی آدرس سرور</button>
+
+        <p class="last-check" id="lastCheck">
+            Last check: --
+        </p>
     </div>
 </section>
 
@@ -273,7 +276,10 @@ footer {
     <div class="card">
         <h2>کانال تلگرام BAZIGAME</h2>
         <p>برای اطلاع از اخبار سرور وارد کانال شو.</p>
-        <a class="btn" href="https://t.me/Brownno01" target="_blank" rel="noopener">
+        <a class="btn"
+           href="https://t.me/Brownno01"
+           target="_blank"
+           rel="noopener">
             ورود به کانال تلگرام
         </a>
     </div>
@@ -283,7 +289,10 @@ footer {
     <div class="card">
         <h2>پشتیبانی BAZIGAME</h2>
         <p>برای ارتباط با مدیریت سرور پیام بده.</p>
-        <a class="btn" href="https://t.me/emranso" target="_blank" rel="noopener">
+        <a class="btn"
+           href="https://t.me/emranso"
+           target="_blank"
+           rel="noopener">
             ارسال پیام به پشتیبانی
         </a>
     </div>
@@ -313,7 +322,6 @@ function showPage(id) {
 
     setTimeout(() => {
         current.classList.remove('active', 'leaving');
-
         next.classList.add('active');
 
         window.scrollTo({
@@ -336,51 +344,188 @@ function copyIP() {
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(address)
             .then(() => alert('آدرس سرور کپی شد!'))
-            .catch(() => alert('کپی انجام نشد. آدرس را دستی کپی کن.'));
+            .catch(() => alert('کپی انجام نشد.'));
     } else {
         alert('آدرس سرور: ' + address);
     }
 }
 
-/* نمایش تعداد بازیکنان */
+/* تنظیمات سرور */
 
-async function updatePlayers() {
+const SERVER = 'bazigame.aternos.me:40984';
+
+const statusElement = document.getElementById('status');
+const playersElement = document.getElementById('players');
+const lastCheckElement = document.getElementById('lastCheck');
+
+let checking = false;
+
+/* دریافت اطلاعات از API */
+
+async function getAPI(url) {
+
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+        controller.abort();
+    }, 10000);
+
     try {
-        const r = await fetch(
-            'https://api.mcsrvstat.us/3/bazigame.aternos.me:40984'
-        );
+        const response = await fetch(url, {
+            method: 'GET',
+            cache: 'no-store',
+            signal: controller.signal
+        });
 
-        if (!r.ok) throw new Error('API error');
-
-        const d = await r.json();
-
-        if (d.online) {
-            document.getElementById('players').innerText =
-                (d.players?.online ?? 0) + ' / ' +
-                (d.players?.max ?? '?');
-
-            document.getElementById('status').innerText =
-                '● سرور آنلاین است';
-        } else {
-            document.getElementById('players').innerText = '0 / --';
-
-            document.getElementById('status').innerText =
-                '● سرور آفلاین است';
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
         }
 
-    } catch (e) {
-        document.getElementById('players').innerText = '-- / --';
+        const data = await response.json();
 
-        document.getElementById('status').innerText =
-            'وضعیت نامشخص';
+        if (typeof data.online !== 'boolean') {
+            throw new Error('Invalid API response');
+        }
+
+        return data;
+
+    } finally {
+        clearTimeout(timeout);
     }
 }
 
+/* API اول */
+
+async function checkFirstAPI() {
+    const url =
+        'https://api.mcsrvstat.us/3/' + SERVER;
+
+    const data = await getAPI(url);
+
+    return {
+        online: data.online,
+        onlinePlayers: data.players?.online ?? 0,
+        maxPlayers: data.players?.max ?? '?',
+        source: 'MCSRVSTAT'
+    };
+}
+
+/* API دوم */
+
+async function checkSecondAPI() {
+    const url =
+        'https://api.mcstatus.io/v2/status/java/' +
+        SERVER + '?query=false&timeout=8';
+
+    const data = await getAPI(url);
+
+    return {
+        online: data.online,
+        onlinePlayers: data.players?.online ?? 0,
+        maxPlayers: data.players?.max ?? '?',
+        source: 'MCSTATUS'
+    };
+}
+
+/* نمایش نتیجه */
+
+function showOnline(data) {
+
+    playersElement.innerText =
+        data.onlinePlayers + ' / ' + data.maxPlayers;
+
+    statusElement.innerText =
+        '● سرور آنلاین است';
+
+    statusElement.style.color = '#65e69b';
+}
+
+function showOffline() {
+
+    playersElement.innerText = '0 / --';
+
+    statusElement.innerText =
+        '● سرور آفلاین است';
+
+    statusElement.style.color = '#ff5555';
+}
+
+function showUnknown() {
+
+    playersElement.innerText = '-- / --';
+
+    statusElement.innerText =
+        '● دریافت وضعیت ناموفق بود';
+
+    statusElement.style.color = '#ffcc55';
+}
+
+/* بررسی اصلی با دو API */
+
+async function updatePlayers() {
+
+    if (checking) return;
+
+    checking = true;
+
+    statusElement.innerText = 'در حال بررسی سرور...';
+    statusElement.style.color = '#79c4ff';
+
+    const results = await Promise.allSettled([
+        checkFirstAPI(),
+        checkSecondAPI()
+    ]);
+
+    const validResults = results
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value);
+
+    const onlineResult = validResults.find(
+        result => result.online === true
+    );
+
+    if (onlineResult) {
+
+        showOnline(onlineResult);
+
+        console.log(
+            'Server online. API:',
+            onlineResult.source
+        );
+
+    } else if (validResults.length === 2) {
+
+        showOffline();
+
+        console.log('Both APIs report offline.');
+
+    } else {
+
+        showUnknown();
+
+        console.log(
+            'API errors:',
+            results
+        );
+    }
+
+    const now = new Date();
+
+    lastCheckElement.innerText =
+        'Last check: ' + now.toLocaleTimeString('fa-IR');
+
+    checking = false;
+}
+
+/* شروع بررسی */
+
 updatePlayers();
+
+/* بررسی مجدد هر ۶۰ ثانیه */
+
 setInterval(updatePlayers, 60000);
 
 </script>
 
 </body>
 </html>
-```
