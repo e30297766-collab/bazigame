@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BAZIGAME | Minecraft Server</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#080b12;
+ color:white;
+ font-family:Tahoma,Arial,sans-serif;
+ text-align:center;
+}
+header{padding:35px 15px 15px}
+.logo{
+ width:180px;
+ max-width:65%;
+ border-radius:15px;
+}
+h1{
+ color:#79c4ff;
+ font-size:38px;
+ letter-spacing:3px;
+ margin:10px 0;
+}
+nav{
+ display:flex;
+ justify-content:center;
+ flex-wrap:wrap;
+ gap:10px;
+ padding:15px;
+}
+button,.btn{
+ background:#17283d;
+ color:white;
+ border:1px solid #315477;
+ padding:12px 20px;
+ border-radius:10px;
+ cursor:pointer;
+ font-size:14px;
+ text-decoration:none;
+}
+button:hover,.btn:hover{background:#28527a}
+.page{display:none;padding:20px}
+.page.active{display:block}
+.card{
+ max-width:700px;
+ margin:15px auto;
+ padding:28px 18px;
+ background:#111a29;
+ border:1px solid #253d58;
+ border-radius:18px;
+}
+h2{color:#79c4ff}
+.count{
+ font-size:42px;
+ color:#65e69b;
+ font-weight:bold;
+ direction:ltr;
+}
+.ip{
+ direction:ltr;
+ background:#080e18;
+ padding:13px;
+ border-radius:9px;
+ display:inline-block;
+ margin:10px;
+}
+p{line-height:2;color:#c2cbd7}
+.command{
+ direction:ltr;
+ background:#080e18;
+ color:#79c4ff;
+ padding:12px;
+ border-radius:8px;
+}
+.status{color:#65e69b}
+footer{padding:30px;color:#78899c}
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="logo.png" class="logo" alt="BAZIGAME Logo">
+<h1>BAZIGAME</h1>
+<p>MINECRAFT SERVER</p>
+</header>
+
+<nav>
+<button onclick="showPage('home')">صفحه اصلی</button>
+<button onclick="showPage('join')">آموزش ورود</button>
+<button onclick="showPage('register')">ساخت اکانت</button>
+<button onclick="showPage('telegram')">کانال تلگرام</button>
+<button onclick="showPage('support')">پشتیبانی</button>
+</nav>
+
+<section id="home" class="page active">
+<div class="card">
+<h2>به BAZIGAME خوش آمدید</h2>
+<p class="status" id="status">در حال بررسی سرور...</p>
+<div class="count" id="players">-- / --</div>
+<p>PLAYERS ONLINE</p>
+<h3>آدرس سرور</h3>
+<div class="ip" id="ip">bazigame.aternos.me:40984</div>
+<br>
+<button onclick="copyIP()">کپی آدرس سرور</button>
+</div>
+</section>
+
+<section id="join" class="page">
+<div class="card">
+<h2>آموزش ورود به سرور</h2>
+<p>۱. وارد Minecraft شو.</p>
+<p>۲. بخش Multiplayer را باز کن.</p>
+<p>۳. گزینه Add Server را بزن.</p>
+<p>۴. آدرس سرور را وارد کن:</p>
+<div class="command">bazigame.aternos.me:40984</div>
+<p>۵. روی Join Server کلیک کن.</p>
+</div>
+</section>
+
+<section id="register" class="page">
+<div class="card">
+<h2>ساخت اکانت</h2>
+<p>اگر برای اولین بار وارد سرور می‌شوی:</p>
+<div class="command">/register Password Password</div>
+<p>به جای Password رمز دلخواه خودت را وارد کن.</p>
+<h2>ورود به اکانت</h2>
+<div class="command">/login Password</div>
+<p>رمز خودت را به هیچ‌کس نده.</p>
+</div>
+</section>
+
+<section id="telegram" class="page">
+<div class="card">
+<h2>کانال تلگرام BAZIGAME</h2>
+<p>برای اطلاع از اخبار سرور وارد کانال شو.</p>
+<a class="btn" href="https://t.me/Brownno01" target="_blank">ورود به کانال تلگرام</a>
+</div>
+</section>
+
+<section id="support" class="page">
+<div class="card">
+<h2>پشتیبانی BAZIGAME</h2>
+<p>برای ارتباط با مدیریت سرور پیام بده.</p>
+<a class="btn" href="https://t.me/emranso" target="_blank">ارسال پیام به پشتیبانی</a>
+</div>
+</section>
+
+<footer>
+© BAZIGAME Minecraft Server
+</footer>
+
+<script>
+function showPage(id){
+ document.querySelectorAll('.page').forEach(p=>{
+  p.classList.remove('active');
+ });
+ document.getElementById(id).classList.add('active');
+ window.scrollTo(0,0);
+}
+
+function copyIP(){
+ navigator.clipboard.writeText(
+  document.getElementById('ip').innerText
+ );
+ alert('آدرس سرور کپی شد!');
+}
+
+async function updatePlayers(){
+ try{
+  const r=await fetch(
+   'https://api.mcsrvstat.us/3/bazigame.aternos.me:40984'
+  );
+  const d=await r.json();
+
+  if(d.online){
+   document.getElementById('players').innerText=
+    (d.players?.online ?? 0)+' / '+(d.players?.max ?? '?');
+   document.getElementById('status').innerText='● سرور آنلاین است';
+  }else{
+   document.getElementById('players').innerText='0 / --';
+   document.getElementById('status').innerText='● سرور آفلاین است';
+  }
+ }catch(e){
+  document.getElementById('players').innerText='-- / --';
+  document.getElementById('status').innerText='وضعیت نامشخص';
+ }
+}
+updatePlayers();
+setInterval(updatePlayers,60000);
+</script>
+
+</body>
+</html>
