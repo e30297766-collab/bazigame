@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -7,194 +7,380 @@
 <title>BAZIGAME | Minecraft Server</title>
 
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;
- background:#080b12;
- color:white;
- font-family:Tahoma,Arial,sans-serif;
- text-align:center;
+* {
+    box-sizing: border-box;
 }
-header{padding:35px 15px 15px}
-.logo{
- width:180px;
- max-width:65%;
- border-radius:15px;
+
+body {
+    margin: 0;
+    background: #080b12;
+    color: white;
+    font-family: Tahoma, Arial, sans-serif;
+    text-align: center;
+    overflow-x: hidden;
 }
-h1{
- color:#79c4ff;
- font-size:38px;
- letter-spacing:3px;
- margin:10px 0;
+
+/* انیمیشن ورود اولیه */
+
+header {
+    padding: 35px 15px 15px;
 }
-nav{
- display:flex;
- justify-content:center;
- flex-wrap:wrap;
- gap:10px;
- padding:15px;
+
+.logo {
+    width: 180px;
+    max-width: 65%;
+    border-radius: 15px;
+    opacity: 0;
+    animation: logoEnter 1s ease forwards;
 }
-button,.btn{
- background:#17283d;
- color:white;
- border:1px solid #315477;
- padding:12px 20px;
- border-radius:10px;
- cursor:pointer;
- font-size:14px;
- text-decoration:none;
+
+h1 {
+    color: #79c4ff;
+    font-size: 38px;
+    letter-spacing: 3px;
+    margin: 10px 0;
+    opacity: 0;
+    animation: fadeDown .8s ease .8s forwards;
 }
-button:hover,.btn:hover{background:#28527a}
-.page{display:none;padding:20px}
-.page.active{display:block}
-.card{
- max-width:700px;
- margin:15px auto;
- padding:28px 18px;
- background:#111a29;
- border:1px solid #253d58;
- border-radius:18px;
+
+header p {
+    opacity: 0;
+    animation: fadeDown .8s ease 1.2s forwards;
 }
-h2{color:#79c4ff}
-.count{
- font-size:42px;
- color:#65e69b;
- font-weight:bold;
- direction:ltr;
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
 }
-.ip{
- direction:ltr;
- background:#080e18;
- padding:13px;
- border-radius:9px;
- display:inline-block;
- margin:10px;
+
+button, .btn {
+    background: #17283d;
+    color: white;
+    border: 1px solid #315477;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
 }
-p{line-height:2;color:#c2cbd7}
-.command{
- direction:ltr;
- background:#080e18;
- color:#79c4ff;
- padding:12px;
- border-radius:8px;
+
+button:hover, .btn:hover {
+    background: #28527a;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 18px #31547755;
 }
-.status{color:#65e69b}
-footer{padding:30px;color:#78899c}
+
+nav button {
+    opacity: 0;
+    animation: fadeDown .6s ease forwards;
+}
+
+nav button:nth-child(1) { animation-delay: 1.5s; }
+nav button:nth-child(2) { animation-delay: 1.7s; }
+nav button:nth-child(3) { animation-delay: 1.9s; }
+nav button:nth-child(4) { animation-delay: 2.1s; }
+nav button:nth-child(5) { animation-delay: 2.3s; }
+
+/* صفحات */
+
+.page {
+    display: none;
+    padding: 20px;
+    opacity: 0;
+}
+
+.page.active {
+    display: block;
+    animation: pageEnter .65s ease forwards;
+}
+
+.page.leaving {
+    display: block;
+    animation: pageLeave .35s ease forwards;
+}
+
+.card {
+    max-width: 700px;
+    margin: 15px auto;
+    padding: 28px 18px;
+    background: #111a29;
+    border: 1px solid #253d58;
+    border-radius: 18px;
+    box-shadow: 0 10px 35px #0005;
+}
+
+h2 {
+    color: #79c4ff;
+}
+
+.count {
+    font-size: 42px;
+    color: #65e69b;
+    font-weight: bold;
+    direction: ltr;
+}
+
+.ip {
+    direction: ltr;
+    background: #080e18;
+    padding: 13px;
+    border-radius: 9px;
+    display: inline-block;
+    margin: 10px;
+}
+
+p {
+    line-height: 2;
+    color: #c2cbd7;
+}
+
+.command {
+    direction: ltr;
+    background: #080e18;
+    color: #79c4ff;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.status {
+    color: #65e69b;
+}
+
+footer {
+    padding: 30px;
+    color: #78899c;
+    animation: fadeDown 1s ease 2.5s both;
+}
+
+/* کلیدهای انیمیشن */
+
+@keyframes logoEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-70px) scale(.7);
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pageLeave {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<img src="logo.png" class="logo" alt="BAZIGAME Logo">
-<h1>BAZIGAME</h1>
-<p>MINECRAFT SERVER</p>
+    <img src="./logo.png" class="logo" alt="BAZIGAME Logo">
+    <h1>BAZIGAME</h1>
+    <p>MINECRAFT SERVER</p>
 </header>
 
 <nav>
-<button onclick="showPage('home')">صفحه اصلی</button>
-<button onclick="showPage('join')">آموزش ورود</button>
-<button onclick="showPage('register')">ساخت اکانت</button>
-<button onclick="showPage('telegram')">کانال تلگرام</button>
-<button onclick="showPage('support')">پشتیبانی</button>
+    <button onclick="showPage('home')">صفحه اصلی</button>
+    <button onclick="showPage('join')">آموزش ورود</button>
+    <button onclick="showPage('register')">ساخت اکانت</button>
+    <button onclick="showPage('telegram')">کانال تلگرام</button>
+    <button onclick="showPage('support')">پشتیبانی</button>
 </nav>
 
 <section id="home" class="page active">
-<div class="card">
-<h2>به BAZIGAME خوش آمدید</h2>
-<p class="status" id="status">در حال بررسی سرور...</p>
-<div class="count" id="players">-- / --</div>
-<p>PLAYERS ONLINE</p>
-<h3>آدرس سرور</h3>
-<div class="ip" id="ip">bazigame.aternos.me:40984</div>
-<br>
-<button onclick="copyIP()">کپی آدرس سرور</button>
-</div>
+    <div class="card">
+        <h2>به BAZIGAME خوش آمدید</h2>
+        <p class="status" id="status">در حال بررسی سرور...</p>
+
+        <div class="count" id="players">-- / --</div>
+        <p>PLAYERS ONLINE</p>
+
+        <h3>آدرس سرور</h3>
+        <div class="ip" id="ip">bazigame.aternos.me:40984</div>
+        <br>
+
+        <button onclick="copyIP()">کپی آدرس سرور</button>
+    </div>
 </section>
 
 <section id="join" class="page">
-<div class="card">
-<h2>آموزش ورود به سرور</h2>
-<p>۱. وارد Minecraft شو.</p>
-<p>۲. بخش Multiplayer را باز کن.</p>
-<p>۳. گزینه Add Server را بزن.</p>
-<p>۴. آدرس سرور را وارد کن:</p>
-<div class="command">bazigame.aternos.me:40984</div>
-<p>۵. روی Join Server کلیک کن.</p>
-</div>
+    <div class="card">
+        <h2>آموزش ورود به سرور</h2>
+        <p>۱. وارد Minecraft شو.</p>
+        <p>۲. بخش Multiplayer را باز کن.</p>
+        <p>۳. گزینه Add Server را بزن.</p>
+        <p>۴. آدرس سرور را وارد کن:</p>
+        <div class="command">bazigame.aternos.me:40984</div>
+        <p>۵. روی Join Server کلیک کن.</p>
+    </div>
 </section>
 
 <section id="register" class="page">
-<div class="card">
-<h2>ساخت اکانت</h2>
-<p>اگر برای اولین بار وارد سرور می‌شوی:</p>
-<div class="command">/register Password Password</div>
-<p>به جای Password رمز دلخواه خودت را وارد کن.</p>
-<h2>ورود به اکانت</h2>
-<div class="command">/login Password</div>
-<p>رمز خودت را به هیچ‌کس نده.</p>
-</div>
+    <div class="card">
+        <h2>ساخت اکانت</h2>
+        <p>اگر برای اولین بار وارد سرور می‌شوی:</p>
+        <div class="command">/register Password Password</div>
+        <p>به جای Password رمز دلخواه خودت را وارد کن.</p>
+
+        <h2>ورود به اکانت</h2>
+        <div class="command">/login Password</div>
+        <p>رمز خودت را به هیچ‌کس نده.</p>
+    </div>
 </section>
 
 <section id="telegram" class="page">
-<div class="card">
-<h2>کانال تلگرام BAZIGAME</h2>
-<p>برای اطلاع از اخبار سرور وارد کانال شو.</p>
-<a class="btn" href="https://t.me/Brownno01" target="_blank">ورود به کانال تلگرام</a>
-</div>
+    <div class="card">
+        <h2>کانال تلگرام BAZIGAME</h2>
+        <p>برای اطلاع از اخبار سرور وارد کانال شو.</p>
+        <a class="btn" href="https://t.me/Brownno01" target="_blank" rel="noopener">
+            ورود به کانال تلگرام
+        </a>
+    </div>
 </section>
 
 <section id="support" class="page">
-<div class="card">
-<h2>پشتیبانی BAZIGAME</h2>
-<p>برای ارتباط با مدیریت سرور پیام بده.</p>
-<a class="btn" href="https://t.me/emranso" target="_blank">ارسال پیام به پشتیبانی</a>
-</div>
+    <div class="card">
+        <h2>پشتیبانی BAZIGAME</h2>
+        <p>برای ارتباط با مدیریت سرور پیام بده.</p>
+        <a class="btn" href="https://t.me/emranso" target="_blank" rel="noopener">
+            ارسال پیام به پشتیبانی
+        </a>
+    </div>
 </section>
 
 <footer>
-© BAZIGAME Minecraft Server
+    © BAZIGAME Minecraft Server
 </footer>
 
 <script>
-function showPage(id){
- document.querySelectorAll('.page').forEach(p=>{
-  p.classList.remove('active');
- });
- document.getElementById(id).classList.add('active');
- window.scrollTo(0,0);
+
+/* جابه‌جایی انیمیشنی بین صفحات */
+
+let changingPage = false;
+
+function showPage(id) {
+    if (changingPage) return;
+
+    const current = document.querySelector('.page.active');
+    const next = document.getElementById(id);
+
+    if (!next || current === next) return;
+
+    changingPage = true;
+
+    current.classList.add('leaving');
+
+    setTimeout(() => {
+        current.classList.remove('active', 'leaving');
+
+        next.classList.add('active');
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        setTimeout(() => {
+            changingPage = false;
+        }, 650);
+
+    }, 350);
 }
 
-function copyIP(){
- navigator.clipboard.writeText(
-  document.getElementById('ip').innerText
- );
- alert('آدرس سرور کپی شد!');
+/* کپی آدرس سرور */
+
+function copyIP() {
+    const address = document.getElementById('ip').innerText;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(address)
+            .then(() => alert('آدرس سرور کپی شد!'))
+            .catch(() => alert('کپی انجام نشد. آدرس را دستی کپی کن.'));
+    } else {
+        alert('آدرس سرور: ' + address);
+    }
 }
 
-async function updatePlayers(){
- try{
-  const r=await fetch(
-   'https://api.mcsrvstat.us/3/bazigame.aternos.me:40984'
-  );
-  const d=await r.json();
+/* نمایش تعداد بازیکنان */
 
-  if(d.online){
-   document.getElementById('players').innerText=
-    (d.players?.online ?? 0)+' / '+(d.players?.max ?? '?');
-   document.getElementById('status').innerText='● سرور آنلاین است';
-  }else{
-   document.getElementById('players').innerText='0 / --';
-   document.getElementById('status').innerText='● سرور آفلاین است';
-  }
- }catch(e){
-  document.getElementById('players').innerText='-- / --';
-  document.getElementById('status').innerText='وضعیت نامشخص';
- }
+async function updatePlayers() {
+    try {
+        const r = await fetch(
+            'https://api.mcsrvstat.us/3/bazigame.aternos.me:40984'
+        );
+
+        if (!r.ok) throw new Error('API error');
+
+        const d = await r.json();
+
+        if (d.online) {
+            document.getElementById('players').innerText =
+                (d.players?.online ?? 0) + ' / ' +
+                (d.players?.max ?? '?');
+
+            document.getElementById('status').innerText =
+                '● سرور آنلاین است';
+        } else {
+            document.getElementById('players').innerText = '0 / --';
+
+            document.getElementById('status').innerText =
+                '● سرور آفلاین است';
+        }
+
+    } catch (e) {
+        document.getElementById('players').innerText = '-- / --';
+
+        document.getElementById('status').innerText =
+            'وضعیت نامشخص';
+    }
 }
+
 updatePlayers();
-setInterval(updatePlayers,60000);
+setInterval(updatePlayers, 60000);
+
 </script>
 
 </body>
 </html>
+```
